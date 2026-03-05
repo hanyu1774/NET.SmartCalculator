@@ -88,5 +88,4 @@ internal static partial class CalculatorRegex
 
     [GeneratedRegex(Pattern.NUMBER_LITERAL, RegexOptions.Compiled)]
     public static partial Regex number_literal();
-
 }
