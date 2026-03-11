@@ -9,25 +9,25 @@ internal sealed class EvaluateExpression
         return parse_additive(context);
     }
 
-    private static double parse_additive(ExpressionContext ctx)
+    private static double parse_additive(ExpressionContext expression_context)
     {
-        double left = parse_multiplicative(ctx);
-        while (is_op(ctx, '+') || is_op(ctx, '-'))
+        double left = parse_multiplicative(expression_context);
+        while (is_operator(expression_context, '+') || is_operator(expression_context, '-'))
         {
-            char op = peek(ctx).token_value[0]; consume(ctx);
-            double right = parse_multiplicative(ctx);
-            left = op == '+' ? left + right : left - right;
+            char operator_symbol = peek(expression_context).token_value[0]; consume(expression_context);
+            double right = parse_multiplicative(expression_context);
+            left = operator_symbol == '+' ? left + right : left - right;
         }
         return left;
     }
 
-    private static double parse_multiplicative(ExpressionContext ctx)
+    private static double parse_multiplicative(ExpressionContext expression_context)
     {
-        double left = parse_power(ctx);
-        while (is_op(ctx, '*') || is_op(ctx, '/') || is_op(ctx, '%'))
+        double left = parse_power(expression_context);
+        while (is_operator(expression_context, '*') || is_operator(expression_context, '/') || is_operator(expression_context, '%'))
         {
-            char op = peek(ctx).token_value[0]; consume(ctx);
-            double right = parse_power(ctx);
+            char op = peek(expression_context).token_value[0]; consume(expression_context);
+            double right = parse_power(expression_context);
             left = op switch
             {
                 '*' => left * right,
@@ -39,36 +39,36 @@ internal sealed class EvaluateExpression
         return left;
     }
 
-    private static double parse_power(ExpressionContext ctx)
+    private static double parse_power(ExpressionContext expression_context)
     {
-        double b = parse_unary(ctx);
-        if (!is_op(ctx, '^')) return b;
-        consume(ctx);
-        return Math.Pow(b, parse_power(ctx)); // right-associative
+        double base_value = parse_unary(expression_context);
+        if (!is_operator(expression_context, '^')) return base_value;
+        consume(expression_context);
+        return Math.Pow(base_value, parse_power(expression_context)); // right-associative
     }
 
-    private static double parse_unary(ExpressionContext ctx)
+    private static double parse_unary(ExpressionContext expression_context)
     {
-        if (is_op(ctx, '-')) { consume(ctx); return -parse_unary(ctx); }
-        if (is_op(ctx, '+')) { consume(ctx); return  parse_unary(ctx); }
-        return parse_primary(ctx);
+        if (is_operator(expression_context, '-')) { consume(expression_context); return -parse_unary(expression_context); }
+        if (is_operator(expression_context, '+')) { consume(expression_context); return  parse_unary(expression_context); }
+        return parse_primary(expression_context);
     }
 
-    private static double parse_primary(ExpressionContext ctx)
+    private static double parse_primary(ExpressionContext expression_context)
     {
-        Token t = peek(ctx);
+        Token token = peek(expression_context);
 
-        if (t.token_type == TokenType.Number)
+        if (token.token_type == TokenType.Number)
         {
-            consume(ctx);
-            return double.Parse(t.token_value,
+            consume(expression_context);
+            return double.Parse(token.token_value,
                 System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        if (t.token_type == TokenType.Constant)
+        if (token.token_type == TokenType.Constant)
         {
-            consume(ctx);
-            return t.token_value switch
+            consume(expression_context);
+            return token.token_value switch
             {
                 "pi"  => Math.PI,
                 "e"   => Math.E,
@@ -78,44 +78,44 @@ internal sealed class EvaluateExpression
             };
         }
 
-        if (t.token_type == TokenType.Function)
+        if (token.token_type == TokenType.Function)
         {
-            consume(ctx);
-            bool paren = peek(ctx).token_type == TokenType.LeftParen;
-            if (paren) consume(ctx);
-            double arg = parse_additive(ctx);
-            if (paren) expect(ctx, TokenType.RightParen);
-            return apply(t.token_value, arg);
+            consume(expression_context);
+            bool paren = peek(expression_context).token_type == TokenType.LeftParen;
+            if (paren) consume(expression_context);
+            double arg = parse_additive(expression_context);
+            if (paren) expect(expression_context, TokenType.RightParen);
+            return apply(token.token_value, arg);
         }
 
-        if (t.token_type == TokenType.LeftParen)
+        if (token.token_type == TokenType.LeftParen)
         {
-            consume(ctx);
-            double result = parse_additive(ctx);
-            expect(ctx, TokenType.RightParen);
+            consume(expression_context);
+            double result = parse_additive(expression_context);
+            expect(expression_context, TokenType.RightParen);
             return result;
         }
 
         return double.NaN;
     }
 
-    private static Token peek(ExpressionContext ctx) =>
-        ctx.position < ctx.tokens.Count
-            ? ctx.tokens[ctx.position]
+    private static Token peek(ExpressionContext expression_context) =>
+        expression_context.position < expression_context.tokens.Count
+            ? expression_context.tokens[expression_context.position]
             : new Token { token_type = TokenType.None };
 
-    private static void consume(ExpressionContext ctx) => ctx.position++;
+    private static void consume(ExpressionContext expression_context) => expression_context.position++;
 
-    private static void expect(ExpressionContext ctx, TokenType type)
+    private static void expect(ExpressionContext expression_context, TokenType type)
     {
-        if (peek(ctx).token_type == type) consume(ctx);
+        if (peek(expression_context).token_type == type) consume(expression_context);
     }
 
-    private static bool is_op(ExpressionContext ctx, char op)
+    private static bool is_operator(ExpressionContext expression_context, char op)
     {
-        Token t = peek(ctx);
-        return t.token_type == TokenType.Operator &&
-               t.token_value.Length == 1 && t.token_value[0] == op;
+        Token token = peek(expression_context);
+        return token.token_type == TokenType.Operator &&
+               token.token_value.Length == 1 && token.token_value[0] == op;
     }
 
     private static double apply(string name, double x) => name switch

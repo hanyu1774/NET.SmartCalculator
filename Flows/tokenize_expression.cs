@@ -3,7 +3,7 @@ namespace ConsoleApp.Calculation.Flows;
 
 internal sealed class TokenizeExpression 
 {
-    private static class Expression
+    private static class MathVocabulary
     {
         public static readonly string[] functions = 
         [
@@ -21,7 +21,7 @@ internal sealed class TokenizeExpression
     }
 
     public List<Token> run(string input)
-    {
+    {   
         if (string.IsNullOrEmpty(input)) 
         {
             return [];
@@ -93,7 +93,7 @@ internal sealed class TokenizeExpression
 
     private static Token? try_read_word(string input, ref int position)
     {
-        foreach (string function in Expression.functions)
+        foreach (string function in MathVocabulary.functions)
         {
             if (input.AsSpan(position).StartsWith(function, StringComparison.OrdinalIgnoreCase))
             {
@@ -107,7 +107,7 @@ internal sealed class TokenizeExpression
             }
         }
 
-        foreach (string constant in Expression.constants)
+        foreach (string constant in MathVocabulary.constants)
         {
             if (input.AsSpan(position).StartsWith(constant, StringComparison.OrdinalIgnoreCase))
             {

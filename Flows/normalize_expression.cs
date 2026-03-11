@@ -2,20 +2,6 @@ namespace ConsoleApp.Calculation.Flows;
 
 internal sealed class NormalizeExpression
 {
-    private static string remove_whitespace(string input) 
-    {
-        char[] buffer = new char[input.Length];
-        int write = 0;
-        for(int i = 0; i < input.Length; i++) 
-        {
-            if(!char.IsWhiteSpace(input[i])) 
-            {
-                buffer[write++] = input[i];
-            }
-        }
-        return new string(buffer, 0, write);
-    }
-    
     public string run(string input) 
     {
         if(string.IsNullOrWhiteSpace(input)) 
@@ -38,4 +24,18 @@ internal sealed class NormalizeExpression
         return result;
     }
 
+    private static string remove_whitespace(string input) 
+    {
+        char[] buffer = new char[input.Length];
+        int write = 0;
+        for(int i = 0; i < input.Length; i++) 
+        {
+            if(!char.IsWhiteSpace(input[i])) 
+            {
+                buffer[write++] = input[i];
+            }
+        }
+        return new string(buffer, 0, write);
+    }
+ 
 }
