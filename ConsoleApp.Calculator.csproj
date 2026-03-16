@@ -5,6 +5,47 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PublishAot>true</PublishAot>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <RuntimeIdentifiers>
+      osx-x64;osx-arm64;
+      win-x64;win-arm64;
+      linux-x64;linux-arm64
+    </RuntimeIdentifiers>
+
+    <!-- Enable trimming optimizations for smaller binaries -->
+    <PublishTrimmed>true</PublishTrimmed>
+
+    <!-- Enable all available size optimizations -->
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+
+    <!-- Invariant globalization (removes culture-specific data for smaller size) -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- 1. Remove ALL debug symbols -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+
+    <!-- 2. Strip symbols on Unix/Mac -->
+    <StripSymbols>true</StripSymbols>
+
+    <!-- 3. Disable stack trace data generation -->
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+
+    <!-- 4. Disable complete type metadata -->
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+
+    <!-- 5. Fold identical method bodies (obfuscation) -->
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+
+    <!-- 7. Disable runtime marshalling metadata -->
+    <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
+
+    <!-- 8. Enable aggressive inlining -->
+    <IlcInstructionSet>native</IlcInstructionSet>
   </PropertyGroup>
 
 </Project>

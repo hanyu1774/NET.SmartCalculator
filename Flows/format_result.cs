@@ -2,8 +2,15 @@ using System.Text.RegularExpressions;
 
 namespace ConsoleApp.Calculation.Flows;
 
-internal sealed class FormatResult
+internal sealed partial class FormatResult
 {
+
+    [GeneratedRegex(@"[eE]\+?0*(\d+)$")]
+    private static partial Regex SciNotificationRegex();
+
+    [GeneratedRegex(@"(\.\d*?)0+$|\.0*$")]
+    private static partial Regex TrailingZeroesRegex();
+
     public string run(double value)
     {
         if (double.IsNaN(value))              return "Not a number";
@@ -16,11 +23,11 @@ internal sealed class FormatResult
         {
             string sci = value.ToString("G15",
                 System.Globalization.CultureInfo.InvariantCulture);
-            return Regex.Replace(sci, @"[eE]\+?0*(\d+)$", m => $"E{m.Groups[1].Value}");
+            return SciNotificationRegex().Replace(sci, m => $"E{m.Groups[1].Value}");
         }
 
         string result = value.ToString("G14",
             System.Globalization.CultureInfo.InvariantCulture);
-        return Regex.Replace(result, @"(\.\d*?)0+$|\.0*$", "$1");
+        return TrailingZeroesRegex().Replace(result, "$1");
     }
 }

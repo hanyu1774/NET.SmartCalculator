@@ -40,7 +40,7 @@ internal sealed class TokenizeExpression
 
             if (char.IsLetter(input[position]))
             {
-                Token? word = try_read_word(input, ref position);
+                Token word = try_read_word(input, ref position);
                 if (word is not null) { tokens.Add(word); continue; }
             }
 
@@ -91,7 +91,7 @@ internal sealed class TokenizeExpression
         };
     }
 
-    private static Token? try_read_word(string input, ref int position)
+    private static Token try_read_word(string input, ref int position)
     {
         foreach (string function in MathVocabulary.functions)
         {
@@ -125,6 +125,6 @@ internal sealed class TokenizeExpression
         }
 
         position++;
-        return null;
+        return new Token();
     }
 }

@@ -25,5 +25,5 @@ public sealed class Token
     public TokenType token_type;
     public string token_value = string.Empty;
     public int position = 0;
-    public string format_token => $"[{token_type}: '{token_value}' @{position}]"; // for debugging
+    //public string format_token => $"[{token_type}: '{token_value}' @{position}]"; // for debugging
 }
