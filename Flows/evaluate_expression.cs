@@ -134,7 +134,7 @@ internal sealed class EvaluateExpression
         expression_context.has_error = true;
         expression_context.error_message = token.token_type == TokenType.None
             ? "Expression ends unexpectedly; a missing operand?"
-            : $"Unexprected token '{token.token_value}' in position {token.position+1}";
+            : $"Unexpected token '{token.token_value}' in position {token.position+1}";
     }
     return double.NaN;
 }
@@ -146,21 +146,21 @@ internal sealed class EvaluateExpression
 
     private static void consume(ExpressionContext expression_context) => expression_context.position++;
 
-private static void expect(ExpressionContext expression_context, TokenType type)
-{
-    if (peek(expression_context).token_type == type)
+    private static void expect(ExpressionContext expression_context, TokenType type)
     {
-        consume(expression_context);
-        return;
-    }
+        if (peek(expression_context).token_type == type)
+        {
+            consume(expression_context);
+            return;
+        }
 
-    if (!expression_context.has_error)
-    {
-        expression_context.has_error = true;
-        expression_context.error_message =
-            $"Expected: {type} in poisition {peek(expression_context).position+1}";
+        if (!expression_context.has_error)
+        {
+            expression_context.has_error = true;
+            expression_context.error_message =
+                $"Expected: {type} in position {peek(expression_context).position+1}";
+        }
     }
-}
 
     private static bool is_operator(ExpressionContext expression_context, char op)
     {
