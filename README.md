@@ -6,8 +6,7 @@ This application does almost everything as expected. There are still a few thing
 The following tasks weren't done yet.
 
 * Provide a functionality to explain things via the command `help`. Examples: how to do root calculations via `sqrt()` etc..
-* Replace `double` with `decimal` for better precisions. 
-* When using `decimal`... how should the output (the result) look like? What should be done? 🤔
+* Replace `double` with `decimal` for better precision.
 * Easy re-use of error messages because the error messages are currently hardcoded. Make them also consistent, e.g. `Not a number` vs `Error: [...]`
 * Remove some of the dead code.
 * Improve the looks of TUI even more.
