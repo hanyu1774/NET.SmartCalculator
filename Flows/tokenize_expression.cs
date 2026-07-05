@@ -40,7 +40,7 @@ internal sealed class TokenizeExpression
 
             if (char.IsLetter(input[position]))
             {
-                Token word = try_read_word(input, ref position);
+                Token? word = try_read_word(input, ref position);
                 if (word is not null) { tokens.Add(word); continue; }
             }
 
@@ -49,10 +49,8 @@ internal sealed class TokenizeExpression
                 '+' or '-' or '*' or '/' or '^' or '%' => TokenType.Operator,
                 '(' => TokenType.LeftParen,
                 ')' => TokenType.RightParen,
-                _   => TokenType.None
+                _   => TokenType.Unknown
             };
-
-            if (type == TokenType.None) { position++; continue; }
 
             tokens.Add(new Token
             {
@@ -68,9 +66,10 @@ internal sealed class TokenizeExpression
     private static Token read_number(string input, ref int position)
     {
         int start = position;
-        while (position < input.Length && (char.IsDigit(input[position]) || input[position] == '.'))
+        while (position < input.Length && (char.IsDigit(input[position]) || input[position] == '.')) 
+        {
             position++;
-
+        }
         if (position < input.Length && (input[position] == 'e' || input[position] == 'E'))
         {
             int look = position + 1;
@@ -85,13 +84,13 @@ internal sealed class TokenizeExpression
 
         return new Token
         {
-            token_type  = TokenType.Number,
+            token_type = TokenType.Number,
             token_value = input[start..position],
-            position    = start
+            position = start
         };
     }
 
-    private static Token try_read_word(string input, ref int position)
+    private static Token? try_read_word(string input, ref int position)
     {
         foreach (string function in MathVocabulary.functions)
         {
@@ -101,8 +100,12 @@ internal sealed class TokenizeExpression
                 if (end >= input.Length || !char.IsLetterOrDigit(input[end]))
                 {
                     int start = position; position = end;
-                    return new Token { token_type = TokenType.Function,
-                                       token_value = function, position = start };
+                    return new Token 
+                    { 
+                        token_type = TokenType.Function,
+                        token_value = function, 
+                        position = start 
+                    };
                 }
             }
         }
@@ -123,8 +126,10 @@ internal sealed class TokenizeExpression
                 }
             }
         }
-
-        position++;
-        return new Token();
+        
+        // Needs to be here because if the input wasn't recognized, then null needs to be returned.
+        // Otherwise the Enum value TokenType.None is used for calculation, which will produce errornous results.
+        // If something is indeed null, then an error message can be thrown because the input is errornous.
+        return null;
     }
 }
