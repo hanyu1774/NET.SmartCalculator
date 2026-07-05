@@ -1,135 +1,38 @@
-using ConsoleApp.Calculation.Models;
 namespace ConsoleApp.Calculation.Flows;
 
-internal sealed class TokenizeExpression 
+internal sealed class NormalizeExpression
 {
-    private static class MathVocabulary
+    public string run(string input) 
     {
-        public static readonly string[] functions = 
-        [
-            "log10", "log2", "sinh", "cosh", "tanh",
-            "asin", "acos", "atan", "sqrt", "cbrt",
-            "ceil", "floor", "round", "sign",
-            "sin", "cos", "tan", "log", "ln",
-            "abs", "exp"
-        ];
-
-        public static readonly string[] constants =
-        [
-            "tau", "phi", "pi", "e"
-        ];
-    }
-
-    public List<Token> run(string input)
-    {   
-        if (string.IsNullOrEmpty(input)) 
+        if(string.IsNullOrWhiteSpace(input)) 
         {
-            return [];
+            return string.Empty;
         }
 
-        List<Token> tokens = new List<Token>(input.Length / 2 + 2);
-        int position    = 0;
+        string result = input;
+        result = result.Replace('\u2212', '-');
+        result = result.Replace('\u00D7', '*'); // × Unicode times
+        result = result.Replace('\u00F7', '/'); // ÷ Unicode divide
+        result = result.Replace("²", "^2");
+        result = result.Replace("³", "^3");
+        result = result.Replace(',', '.'); // German decimal comma
+        result = remove_whitespace(result);
 
-        while (position < input.Length)
-        {
-            if (char.IsDigit(input[position]) || input[position] == '.')
-            {
-                tokens.Add(read_number(input, ref position));
-                continue;
-            }
-
-            if (char.IsLetter(input[position]))
-            {
-                Token? word = try_read_word(input, ref position);
-                if (word is not null) { tokens.Add(word); continue; }
-            }
-
-            TokenType type = input[position] switch
-            {
-                '+' or '-' or '*' or '/' or '^' or '%' => TokenType.Operator,
-                '(' => TokenType.LeftParen,
-                ')' => TokenType.RightParen,
-                _   => TokenType.Unknown
-            };
-
-            tokens.Add(new Token
-            {
-                token_type  = type,
-                token_value = input[position].ToString(),
-                position    = position
-            });
-            position++;
-        }
-        return tokens;
+        return result;
     }
 
-    private static Token read_number(string input, ref int position)
+    private static string remove_whitespace(string input) 
     {
-        int start = position;
-        while (position < input.Length && (char.IsDigit(input[position]) || input[position] == '.')) 
+        char[] buffer = new char[input.Length];
+        int write = 0;
+        for(int i = 0; i < input.Length; i++) 
         {
-            position++;
-        }
-        if (position < input.Length && (input[position] == 'e' || input[position] == 'E'))
-        {
-            int look = position + 1;
-            if (look < input.Length &&
-                (char.IsDigit(input[look]) || input[look] == '+' || input[look] == '-'))
+            if(!char.IsWhiteSpace(input[i])) 
             {
-                position++;
-                if (input[position] == '+' || input[position] == '-') position++;
-                while (position < input.Length && char.IsDigit(input[position])) position++;
+                buffer[write++] = input[i];
             }
         }
-
-        return new Token
-        {
-            token_type = TokenType.Number,
-            token_value = input[start..position],
-            position = start
-        };
+        return new string(buffer, 0, write);
     }
-
-    private static Token? try_read_word(string input, ref int position)
-    {
-        foreach (string function in MathVocabulary.functions)
-        {
-            if (input.AsSpan(position).StartsWith(function, StringComparison.OrdinalIgnoreCase))
-            {
-                int end = position + function.Length;
-                if (end >= input.Length || !char.IsLetterOrDigit(input[end]))
-                {
-                    int start = position; position = end;
-                    return new Token 
-                    { 
-                        token_type = TokenType.Function,
-                        token_value = function, 
-                        position = start 
-                    };
-                }
-            }
-        }
-
-        foreach (string constant in MathVocabulary.constants)
-        {
-            if (input.AsSpan(position).StartsWith(constant, StringComparison.OrdinalIgnoreCase))
-            {
-                int end = position + constant.Length;
-                if (end >= input.Length || !char.IsLetterOrDigit(input[end]))
-                {
-                    int start = position; position = end;
-                    return new Token 
-                    { 
-                        token_type = TokenType.Constant,
-                        token_value = constant, position = start 
-                    };
-                }
-            }
-        }
-        
-        // Needs to be here because if the input wasn't recognized, then null needs to be returned.
-        // Otherwise the Enum value TokenType.None is used for calculation, which will produce errornous results.
-        // If something is indeed null, then an error message can be thrown because the input is errornous.
-        return null;
-    }
+ 
 }
