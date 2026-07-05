@@ -2,7 +2,7 @@
 This is a console application, where you can do any advanced calculation. It mirrors most functionalities of the smart calculator, when you type math expressions into the Google search bar. The smart calculator from Google understands most common inputs and expressions (e.g. `33+(6(28^2-0.55)^2)`) and calculates them. Guess what, NET.SmartCalculator can do that, too.
 
 # Tasks
-This application does almost everything as expected. There are still a few things need to done.
+This application does almost everything as expected. There are still a few things that need to done.
 The following tasks weren't done yet.
 
 * Provide a functionality to explain things via the command `help`. Examples: how to do root calculations via `sqrt()` etc..
