@@ -15,10 +15,7 @@ internal sealed class NormalizeExpression
         result = result.Replace('\u00F7', '/'); // ÷ Unicode divide
         result = result.Replace("²", "^2");
         result = result.Replace("³", "^3");
-        result = result.Replace(',', '.');       // German decimal comma
-        result = result.Replace("--", "+");
-        result = result.Replace("+-", "-");
-        result = result.Replace("-+", "-");
+        result = result.Replace(',', '.'); // German decimal comma
         result = remove_whitespace(result);
 
         return result;
