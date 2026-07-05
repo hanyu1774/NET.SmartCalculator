@@ -13,9 +13,18 @@ internal sealed partial class FormatResult
 
     public string run(double value)
     {
-        if (double.IsNaN(value))              return "Not a number";
-        if (double.IsPositiveInfinity(value)) return "∞";
-        if (double.IsNegativeInfinity(value)) return "-∞";
+        if (double.IsNaN(value)) 
+        {
+            return "Not a number";
+        }
+        if (double.IsPositiveInfinity(value)) 
+        { 
+            return "∞";
+        }
+        if (double.IsNegativeInfinity(value)) 
+        { 
+            return "-∞";
+        }
 
         double abs = Math.Abs(value);
 
