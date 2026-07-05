@@ -46,4 +46,4 @@ If you do change the names or add new attributes, then you might have to update 
 * `flows/get_input.cs`
 * `workflows/workflow.cs`
 
-In those files `ForegroundColor` is used for the string messages. The file `flows/evaluate_expression.cs` doesn't any color settings because error messages are saved here and used `workflows/workflow.cs`, where the foreground color for error messages is already set to red.
+In those files `ForegroundColor` is used for the string messages. The file `flows/evaluate_expression.cs` doesn't need any color settings because error messages are saved here and used by `workflows/workflow.cs`, where the foreground color for error messages is already set to red.
