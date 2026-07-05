@@ -6,6 +6,8 @@ public sealed class ExpressionContext
     public string normalized_input = string.Empty;
     public List<Token> tokens = [];
     public int position = 0;
+    public bool has_error = false;
+    public string error_message = string.Empty;
 }
 
 public enum TokenType 
@@ -17,7 +19,8 @@ public enum TokenType
     LeftParen,
     RightParen,
     Function,
-    Constant
+    Constant,
+    Unknown
 }
 
 public sealed class Token 
