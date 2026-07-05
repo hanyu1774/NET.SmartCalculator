@@ -21,8 +21,7 @@ public sealed class Workflow
         {
             string raw = get_input.run();
 
-            if (raw.Equals("exit", StringComparison.OrdinalIgnoreCase) ||
-                raw.Equals("quit", StringComparison.OrdinalIgnoreCase)) 
+            if (raw.Equals("exit", StringComparison.OrdinalIgnoreCase)
             {
                 break;
             }
