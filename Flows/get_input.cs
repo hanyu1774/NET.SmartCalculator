@@ -4,7 +4,7 @@ internal sealed class GetInput
 {
     public string run()
     {
-        Console.Write("Eingabe: ");
+        Console.Write("Input: ");
         return Console.ReadLine() ?? string.Empty;
     }
 }
