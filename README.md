@@ -10,6 +10,10 @@ The following tasks weren't done yet.
 * Remove some of the dead code.
 * Improve the looks of TUI even more.
 * A functionality to check for previous results.
+* Provide the compiled executables.
+* Performance optimizations.
+* * Strings (via `System.String`) are expensive. Need to figure out how to parse strings without using `string` at all.
+* * Replace `System.Console` with native terminal functionalities from Windows and Linux.
 
 ## What this application doesn't do (yet?)
 You may know the TI-84 (CE) programmable calculator and its capabilities. NET.SmartCalculator doesn't have special functions like the TI-84 (CE) in order to calculate or render things like vectors, interferences, etc.. NET.SmartCalculator doesn't show any graphs, either.
