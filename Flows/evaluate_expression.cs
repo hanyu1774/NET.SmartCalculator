@@ -6,7 +6,17 @@ internal sealed class EvaluateExpression
     public double run(ExpressionContext context)
     {
         if (context.tokens.Count == 0) return 0;
-        return parse_additive(context);
+
+        double value = parse_additive(context);
+
+        if (context.position < context.tokens.Count && !context.has_error)
+        {
+            Token leftover = peek(context);
+            context.has_error = true;
+            context.error_message = $"Unexpected token '{leftover.token_value}' in osition {leftover.position}";
+        }
+
+        return value;
     }
 
     private static double parse_additive(ExpressionContext expression_context)
@@ -31,12 +41,24 @@ internal sealed class EvaluateExpression
             left = op switch
             {
                 '*' => left * right,
-                '/' => right == 0 ? double.NaN : left / right,
+                '/' => divide(expression_context, left, right),
                 '%' => left % right,
                 _   => left
             };
         }
         return left;
+    }
+
+    private static double divide(ExpressionContext expression_context, double left, double right)
+    {
+        if (right != 0) return left / right;
+
+        if (!expression_context.has_error)
+        {
+            expression_context.has_error = true;
+            expression_context.error_message = "Division by zero";
+        }
+        return double.NaN;
     }
 
     private static double parse_power(ExpressionContext expression_context)
@@ -54,50 +76,68 @@ internal sealed class EvaluateExpression
         return parse_primary(expression_context);
     }
 
-    private static double parse_primary(ExpressionContext expression_context)
+private static double parse_primary(ExpressionContext expression_context)
+{
+    Token token = peek(expression_context);
+
+    if (token.token_type == TokenType.Number)
     {
-        Token token = peek(expression_context);
-
-        if (token.token_type == TokenType.Number)
+        consume(expression_context);
+        if (double.TryParse(token.token_value,
+                System.Globalization.CultureInfo.InvariantCulture, out double number))
         {
-            consume(expression_context);
-            return double.Parse(token.token_value,
-                System.Globalization.CultureInfo.InvariantCulture);
+            return number;
         }
 
-        if (token.token_type == TokenType.Constant)
+        if (!expression_context.has_error)
         {
-            consume(expression_context);
-            return token.token_value switch
-            {
-                "pi"  => Math.PI,
-                "e"   => Math.E,
-                "tau" => Math.Tau,
-                "phi" => 1.6180339887498948482,
-                _     => double.NaN
-            };
+            expression_context.has_error = true;
+            expression_context.error_message =
+                $"Invalid number '{token.token_value}' in position {token.position}";
         }
-
-        if (token.token_type == TokenType.Function)
-        {
-            consume(expression_context);
-            bool paren = peek(expression_context).token_type == TokenType.LeftParen;
-            if (paren) consume(expression_context);
-            double arg = parse_additive(expression_context);
-            if (paren) expect(expression_context, TokenType.RightParen);
-            return apply(token.token_value, arg);
-        }
-
-        if (token.token_type == TokenType.LeftParen)
-        {
-            consume(expression_context);
-            double result = parse_additive(expression_context);
-            expect(expression_context, TokenType.RightParen);
-            return result;
-        }
-
         return double.NaN;
     }
+
+    if (token.token_type == TokenType.Constant)
+    {
+        consume(expression_context);
+        return token.token_value switch
+        {
+            "pi"  => Math.PI,
+            "e"   => Math.E,
+            "tau" => Math.Tau,
+            "phi" => 1.6180339887498948482,
+            _     => double.NaN
+        };
+    }
+
+    if (token.token_type == TokenType.Function)
+    {
+        consume(expression_context);
+        bool paren = peek(expression_context).token_type == TokenType.LeftParen;
+        if (paren) consume(expression_context);
+        double arg = parse_additive(expression_context);
+        if (paren) expect(expression_context, TokenType.RightParen);
+        return apply(token.token_value, arg);
+    }
+
+    if (token.token_type == TokenType.LeftParen)
+    {
+        consume(expression_context);
+        double result = parse_additive(expression_context);
+        expect(expression_context, TokenType.RightParen);
+        return result;
+    }
+
+    if (!expression_context.has_error)
+    {
+        expression_context.has_error = true;
+        expression_context.error_message = token.token_type == TokenType.None
+            ? "Expression ends unexpectedly; a missing operand?"
+            : $"Unexprected token '{token.token_value}' in position {token.position}";
+    }
+    return double.NaN;
+}
 
     private static Token peek(ExpressionContext expression_context) =>
         expression_context.position < expression_context.tokens.Count
@@ -106,10 +146,21 @@ internal sealed class EvaluateExpression
 
     private static void consume(ExpressionContext expression_context) => expression_context.position++;
 
-    private static void expect(ExpressionContext expression_context, TokenType type)
+private static void expect(ExpressionContext expression_context, TokenType type)
+{
+    if (peek(expression_context).token_type == type)
     {
-        if (peek(expression_context).token_type == type) consume(expression_context);
+        consume(expression_context);
+        return;
     }
+
+    if (!expression_context.has_error)
+    {
+        expression_context.has_error = true;
+        expression_context.error_message =
+            $"Expected: {type} in poisition {peek(expression_context).position}";
+    }
+}
 
     private static bool is_operator(ExpressionContext expression_context, char op)
     {
