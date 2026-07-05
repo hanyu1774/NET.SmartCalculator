@@ -2,8 +2,9 @@
 This is a console application, where you can do any advanced calculation. It mirrors the functionalities of the smart calculator, when you type math expressions into the Google search bar. Said smart calculator understands most common inputs and expressions (e.g. `33+(6(28^2-0.55)^2)`) and calculates them. Guess what, NET.SmartCalculator can do that, too.
 
 ## What this application doesn't do (yet?)
-You may know the TI-84 (CE) programmable calculator and its capabilities. NET.SmartCalculator doesn't have nor can it calculate vectors, interferences, etc.. NET.SmartCalculator doesn't show any graphs, either.
-It would be very interesting, if I were to implement functionalities I mentioned in the future. Who knows? Maybe I will do that?
+You may know the TI-84 (CE) programmable calculator and its capabilities. NET.SmartCalculator doesn't have special functions like the TI-84 (CE) in order to calculate or render things like vectors, interferences, etc.. NET.SmartCalculator doesn't show any graphs, either.
+
+It would be very interesting, if I were to implement mentioned functionalities in the future. Who knows? Maybe I will do that?
 
 ## Small hint...
 This application makes use of RGB colors (via ASCII escape notations) for certain messages. RGB colors are used instead of the standard 8 or 16 color codes because terminals have color profiles: either a default theme or one customized by the user. Those profiles remap the "standard" SGR (Select Graphic Rendition) color codes to whatever colors that profile defines. So, if I say "Red color for this text" using the command `\x1b[31m` in the string, the terminal will use the defined color value for red from the profile.
