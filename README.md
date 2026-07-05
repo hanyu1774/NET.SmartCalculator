@@ -41,7 +41,7 @@ public readonly struct ForegroundColor
 }
 ```
 
-If you do change the colors, then you might have to update the following files, too:
+If you do change the names or add new attributes, then you might have to update the following files, too:
 
 * `flows/get_input.cs`
 * `workflows/workflow.cs`
