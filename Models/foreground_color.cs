@@ -7,10 +7,13 @@ public readonly struct ForegroundColor
     // See also: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
     //
     // Terminals will see them as commands for certain actions, e.g. `\n` => new line
-    // \x1b[ => 'ESC'
+    // \x1b[ translates into 'ESC[' ; You can either use '\033[' or 'ESC[' etc. instead of '\x1b['
+    // Any terminal will understand it as 'ESC[' either way.
+    //
     // 0 or 1 => either 'normal' or 'bold'. If neither are used, then either
     // the font weight default (used by the terminal itself), a previous
     // setting (if the setting within the runtime wasn't reverted) is used or 'normal'.
+    //
     // 38 => foreground color
     // 2 => make use of actual RGB values
     // 'm' => end of instruction
