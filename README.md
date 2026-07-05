@@ -1,6 +1,14 @@
 # NET.SmartCalculator
 This is a console application, where you can do any advanced calculation. It mirrors most functionalities of the smart calculator, when you type math expressions into the Google search bar. The smart calculator from Google understands most common inputs and expressions (e.g. `33+(6(28^2-0.55)^2)`) and calculates them. Guess what, NET.SmartCalculator can do that, too.
 
+# Tasks
+This application does almost everything as expected. There are still a few things need to done.
+The following tasks weren't done yet.
+
+* Provide a functionality to explain things via the command `help`. Examples: how to do root calculations via `sqrt()` etc..
+* Easy re-use of error messages because the error messages are currently hardcoded. Make them also consistent, e.g. `Not a number` vs `Error: [...]`
+* Remove some of the dead code.
+
 ## What this application doesn't do (yet?)
 You may know the TI-84 (CE) programmable calculator and its capabilities. NET.SmartCalculator doesn't have special functions like the TI-84 (CE) in order to calculate or render things like vectors, interferences, etc.. NET.SmartCalculator doesn't show any graphs, either.
 
