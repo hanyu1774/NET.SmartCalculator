@@ -6,7 +6,13 @@ You may know the TI-84 (CE) programmable calculator and its capabilities. NET.Sm
 It would be very interesting, if I were to implement functionalities I mentioned in the future. Who knows? Maybe I will do that?
 
 ## Small hint...
-This application makes use of RGB colors (via ASCII escape notations) for certain messages. See `models/foreground_color.cs`, where colors are set:
+This application makes use of RGB colors (via ASCII escape notations) for certain messages. RGB colors are used instead of the standard 8 or 16 color codes because terminals have color profiles: either a default theme or one customized by the user. Those profiles remap the "standard" SGR (Select Graphic Rendition) color codes to whatever colors that profile defines. So, if I say "Red color for this text" using the command `\x1b[31m` in the string, the terminal will use the defined color value for red from the profile.
+
+If your terminal makes use of a custom theme, then perhaps certain colors make certain message invisible or unreadable.
+Whether or not there might be problems, you can change the colors to your liking or use the standard color codes.
+For more info, check out this page: [ANSI Escape Sequences](https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797)
+
+See `models/foreground_color.cs`, where colors are set:
 
 ```c#
 public readonly struct ForegroundColor 
@@ -16,10 +22,13 @@ public readonly struct ForegroundColor
     // See also: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
     //
     // Terminals will see them as commands for certain actions, e.g. `\n` => new line
-    // \x1b[ => 'ESC'
+    // \x1b[ translates into 'ESC[' ; You can either use '\033[' or 'ESC[' etc. instead of '\x1b['
+    // Any terminal will understand it as 'ESC[' either way.
+    //
     // 0 or 1 => either 'normal' or 'bold'. If neither are used, then either
     // the font weight default (used by the terminal itself), a previous
     // setting (if the setting within the runtime wasn't reverted) is used or 'normal'.
+    //
     // 38 => foreground color
     // 2 => make use of actual RGB values
     // 'm' => end of instruction
@@ -28,6 +37,13 @@ public readonly struct ForegroundColor
     public const string Green = "\x1b[38;2;138;226;52m"; // RGB(138, 226, 52)
     public const string Yellow = "\x1b[38;2;255;223;0m"; // RGB(255, 223, 0)
     public const string LightBlue = "\x1b[38;2;137;196;255m"; // RGB(137, 196, 255)
-    public const string Reset = "\x1b[0;39m"; 
+    public const string Reset = "\x1b[0;39m"; // Resets the font weight and foreground color
 }
 ```
+
+If you do change the colors, then you might have to update the following files, too:
+
+* `flows/get_input.cs`
+* `workflows/workflow.cs`
+
+In those files `ForegroundColor` is used for the string messages. The file `flows/evaluate_expression.cs` doesn't any color settings because error messages are saved here and used `workflows/workflow.cs`, where the foreground color for error messages is already set to red.
