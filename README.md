@@ -6,6 +6,8 @@ This application does almost everything as expected. There are still a few thing
 The following tasks weren't done yet.
 
 * Provide a functionality to explain things via the command `help`. Examples: how to do root calculations via `sqrt()` etc..
+* Fix an issue where operators infront of parentheses are also recognized and don't throw an error.
+* Implement unit test functionalities using `XUnit`.
 * Replace `double` with `decimal` for better precision.
 * Easy re-use of error messages because the error messages are currently hardcoded. Make them also consistent, e.g. `Not a number` vs `Error: [...]`
 * Remove some of the dead code.
