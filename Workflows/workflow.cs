@@ -14,8 +14,8 @@ public sealed class Workflow
         EvaluateExpression evaluate_expression = new();
         FormatResult format_result = new();
         
-        Console.WriteLine("Smart Calculator  |  Type 'exit' to terminate this application");
-        Console.WriteLine("-----------------------------------------------------------------");
+        Console.WriteLine($"{ForegroundColor.LightBlue} Smart Calculator  |  Type 'exit' to terminate this application");
+        Console.WriteLine($"-----------------------------------------------------------------{ForegroundColor.Reset}");
 
         while (true)
         {
@@ -45,14 +45,14 @@ public sealed class Workflow
 
             if (context.has_error)
             {
-                Console.WriteLine($"Error: {context.error_message}");
+                Console.WriteLine($"{ForegroundColor.Red}Error: {context.error_message}{ForegroundColor.Reset}");
                 Console.WriteLine();
                 continue;
             }
 
             string formatted = format_result.run(value);
 
-            Console.WriteLine($"= {formatted}");
+            Console.WriteLine($"={ForegroundColor.Yellow} {formatted} {ForegroundColor.Reset}");
             Console.WriteLine();
         }
     }
