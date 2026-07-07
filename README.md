@@ -6,17 +6,12 @@ This application does almost everything as expected. There are still a few thing
 The following tasks weren't done yet.
 
 * Provide a functionality to explain things via the command `help`. Examples: how to do root calculations via `sqrt()` etc..
-* Fix an issue where operators infront of parentheses aren't recognized.
 * Implement unit tests using `XUnit`.
-* Replace `double` with `decimal` for better precision.
 * Easy re-use of error messages because the error messages are currently hardcoded. Make them also consistent, e.g. `Not a number` vs `Error: [...]`
-* Remove some of the dead code.
 * Improve the looks of TUI even more.
-* A functionality to check for previous results.
 * Provide the compiled executables.
 * Performance optimizations.
 * * Strings (via `System.String`) are expensive. Need to figure out how to parse strings without using `string` at all.
-* * Replace `System.Console` with native terminal functionalities from Windows and Linux either through `DllImport()` or `LibraryImport()`. This is because `System.Console` is also expensive.
 
 ## What this application doesn't do (yet?)
 You may know the TI-84 (CE) programmable calculator and its capabilities. NET.SmartCalculator doesn't have special functions like the TI-84 (CE) in order to calculate or render things like vectors, interferences, etc.. NET.SmartCalculator doesn't show any graphs, either.
