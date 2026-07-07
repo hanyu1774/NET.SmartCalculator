@@ -21,7 +21,7 @@ It would be very interesting, if I were to implement mentioned functionalities i
 ## Small hint...
 This application makes use of RGB colors (via ASCII escape notations) for certain messages. RGB colors are used instead of the standard 8 or 16 color codes because terminals have color profiles: either a default theme or one customized by the user. Those profiles remap the "standard" SGR (Select Graphic Rendition) color codes to whatever colors that profile defines. So, if I say "Red color for this text" using the command `\x1b[31m` in the string, the terminal will use the defined color value for red from the profile.
 
-If your terminal makes use of a custom theme, then perhaps certain colors make certain message invisible or unreadable.
+If your terminal makes use of a custom theme, then perhaps certain colors make some text invisible or unreadable.
 Whether or not there might be problems, you can change the colors to your liking or use the standard color codes.
 For more info, check out this page: [ANSI Escape Sequences](https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797)
 
@@ -54,7 +54,7 @@ public readonly struct ForegroundColor
 }
 ```
 
-If you do change the names or add new attributes, then you might have to update the following files, too:
+If you do change the names or add new attributes, then you might have to update those two files:
 
 * `flows/get_input.cs`
 * `workflows/workflow.cs`
